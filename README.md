@@ -1,49 +1,38 @@
 # 🛠️ Servii AI - Copiloto Inteligente para Servicios del Hogar
 
-**Proyecto: Segunda Pre-entrega - IA: Generación de Prompts**  
-**Autor:** Mateo Bentos
+## 1. Resumen
+**Servii AI** es una Prueba de Concepto (POC) que busca digitalizar y estandarizar la contratación de servicios de mantenimiento del hogar en Uruguay. Utilizando técnicas de *Fast Prompting* e Inteligencia Artificial Generativa, la plataforma procesa descripciones informales de los usuarios y devuelve Fichas Técnicas estructuradas. Esto elimina la necesidad de visitas presenciales de diagnóstico, ahorrando tiempo y dinero tanto a clientes como a profesionales.
 
----
+## 2. Introducción
+* **Nombre del proyecto:** Servii AI.
+* **Presentación del problema:** Existe una gran fricción e informalidad al contratar servicios del hogar (el 43,1% del sector es informal según el INE). Los usuarios describen problemas de forma vaga, obligando a los técnicos a cotizar "a ciegas" o hacer visitas previas no remuneradas.
+* **Desarrollo de la propuesta de solución:** Un "Director Técnico Virtual" impulsado por LLMs que traduce la solicitud del usuario en un diagnóstico estructurado (rubro, urgencia, materiales). Se utilizan modelos de texto-texto para el motor lógico y modelos texto-imagen para conceptualizar la plataforma.
+* **Justificación de la viabilidad:** El proyecto es técnica y financieramente viable. Utilizando *Fast Prompting* se minimiza el uso de *tokens*, logrando que cada diagnóstico cueste fracciones de centavo de dólar mediante la API de Gemini, un costo marginal frente al valor de intermediar un servicio real.
 
-## 1. Introducción
-**Nombre del proyecto:** Servii AI
+## 3. Objetivos
+* Desarrollar una POC funcional en Python que automatice diagnósticos técnicos.
+* Estandarizar solicitudes informales en esquemas estructurados comprensibles para los trabajadores.
+* Optimizar los costos de API limitando parámetros de salida y evitando flujos conversacionales innecesarios.
 
-## 2. Presentación del problema a abordar
-El problema central radica en la fricción, informalidad y pérdida de tiempo al contratar servicios de mantenimiento y reparaciones del hogar en Uruguay. Según datos del Instituto Nacional de Estadística (INE), la informalidad laboral en el sector de oficios alcanza un alarmante 43,1%. Los usuarios sin conocimientos técnicos suelen describir los problemas de forma vaga y confusa. Esto obliga a los profesionales (sanitarios, electricistas, albañiles, etc.) a realizar visitas presenciales "a ciegas" simplemente para diagnosticar, lo que genera pérdida de tiempo, costos operativos innecesarios y presupuestos altamente variables.
+## 4. Metodología
+Se implementó un flujo de un solo paso (*Zero-Shot*) mediante un script en Python (Jupyter Notebook) que consume la API REST de Google Gemini. El código busca dinámicamente el modelo compatible en la cuenta del usuario, inyecta el problema doméstico en un *System Prompt* restrictivo, y devuelve la respuesta en una única llamada para maximizar rentabilidad.
 
-## 3. Desarrollo de la propuesta de solución
-**Servii AI** es una plataforma que utiliza Inteligencia Artificial Generativa para actuar como un "Director Técnico Virtual". La IA toma la solicitud informal del usuario y la transforma en una **Ficha Técnica estructurada** en tiempo real mediante técnicas de **Fast Prompting**. 
+## 5. Herramientas y tecnologías
+* **Fast Prompting (Zero-Shot con Output Estructurado):** Se priorizó la velocidad y reducción de costos limitando los *max_tokens* y aplicando restricciones severas ("cero charla") para evitar alucinaciones.
+* **Google Gemini (API REST):** Seleccionado por su relación velocidad/costo (modelo flash).
+* **Nightcafe / DALL-E:** Para la generación texto-imagen del mockup de la interfaz, conceptualizando el producto visualmente sin depender de la API de OpenAI.
 
-Esta solución se vincula directamente al desarrollo de modelos de IA (LLMs) al utilizar el procesamiento de lenguaje natural para categorizar averías, inferir niveles de urgencia y listar los materiales necesarios. Esto estandariza el proceso, permitiendo al profesional cotizar a distancia de forma precisa y transparente.
+## 6. Implementación
+El código en Python se encuentra disponible en el archivo `Servii_AI_POC.ipynb` de este repositorio. 
 
-## 4. Justificación de la viabilidad del proyecto
-El proyecto es altamente viable tanto a nivel técnico como financiero:
-*   **Viabilidad Técnica:** Fraccionar el problema (ejecutar un único prompt de diagnóstico directo y estructurado) mantiene la arquitectura simple y libre de alucinaciones.
-*   **Viabilidad Financiera:** Utilizar modelos eficientes como **Gemini 1.5 Flash** junto con técnicas de *Fast Prompting* (restringiendo tokens de salida y evitando un chatbot conversacional) reduce drásticamente el costo computacional. Procesar una solicitud mediante la API cuesta fracciones de centavo de dólar, logrando que el modelo sea 100% rentable frente al valor de intermediar un servicio real.
+**Implementación de Imagen (Mockup de la UI):**
+* **Herramienta:** Nightcafe / DALL-E
+* **Prompt utilizado:** *"Una pantalla de celular mostrando la interfaz de una aplicación moderna llamada Servii AI, diseñada para contratar técnicos del hogar. Diseño súper limpio tipo startup, usando azul oscuro y detalles celeste brillante. Alerta de reparación eléctrica con estilo minimalista, iconos claros."*
+* **Salida generada:**
+![Interfaz de Servii AI](mockup.jpg) *(Asegúrate de subir tu imagen al repositorio con el nombre mockup.jpg)*
 
-## 5. Objetivos
-*   **Objetivo General:** Desarrollar una Prueba de Concepto (POC) funcional utilizando Python que automatice el diagnóstico técnico de averías del hogar.
-*   **Objetivos Específicos:**
-    *   Reducir el tiempo de diagnóstico inicial utilizando IA.
-    *   Estandarizar las solicitudes informales en un formato técnico estructurado (JSON) comprensible para los trabajadores.
-    *   Optimizar el consumo de la API y los costos operativos utilizando un único *prompt* altamente restrictivo y limitando el tamaño máximo de la respuesta.
+## 7. Resultados
+La implementación logra extraer exitosamente la intención del usuario a partir de inputs vagos (ej. *"hace ruido a chispa"*), deduciendo correctamente el oficio requerido (Electricista) y la urgencia (Alta). La técnica de *Fast Prompting* demostró ser efectiva: el modelo jamás se desvió del formato solicitado y mantuvo el consumo de tokens al mínimo establecido, probando que la automatización del diagnóstico es real y rentable.
 
-## 6. Metodología
-El proyecto se lleva a cabo mediante un enfoque iterativo de pruebas (POC) desarrollado en una **Jupyter Notebook**. 
-*   **Procedimiento:** Se implementó un *script* en Python que consume directamente la API REST de Google Gemini. Se dividió el código en funciones simples, implementando un simulador interactivo donde el usuario ingresa su problema. La IA inyecta este problema en el sistema y devuelve una Ficha Técnica en una sola consulta, maximizando la velocidad y rentabilidad del sistema. Adicionalmente, el código incluye una validación dinámica que detecta automáticamente qué versión del modelo Gemini está habilitada en la cuenta del usuario para evitar errores de conexión.
-
-## 7. Herramientas y tecnologías
-*   **Técnica principal:** **Fast Prompting (Zero-Shot con Output Estructurado).** 
-    *   *Justificación:* En un entorno de producción, la velocidad y el costo son críticos. En lugar de darle contexto largo o múltiples ejemplos (Few-Shot), se utiliza un *System Prompt* directo, con restricciones severas ("Cero charla", "sin saludos") y un formato JSON estricto. Esto disminuye la latencia y reduce el uso de tokens, haciendo la app escalable.
-*   **Tecnologías:** 
-    *   Python y Jupyter Notebooks.
-    *   API REST de Google Gemini (Modelo *gemini-1.5-flash* por su excelente relación velocidad/costo).
-    *   Librerías `requests` y `json` para conexiones directas y parseo seguro de datos.
-
----
-
-## 🚀 Cómo ejecutar la Prueba de Concepto (POC)
-1. Abre el archivo `Servii_AI_POC.ipynb` en tu entorno preferido (Visual Studio Code, Jupyter o Google Colab).
-2. Ejecuta la celda principal de código.
-3. Ingresa tu API Key de Gemini cuando el sistema te lo solicite en la barra superior.
-4. Interactúa con el simulador ingresando un problema doméstico real (ej. *"El calefón pierde agua por debajo y hace ruido a chispa"*).
+## 8. Conclusiones
+Los objetivos propuestos se cumplieron a cabalidad. Se comprobó que el uso de Inteligencia Artificial Generativa no requiere interfaces conversacionales complejas (chatbots) para ser útil; un prompt estricto y unidireccional (*Fast Prompting*) es suficiente para estructurar datos caóticos y resolver un problema logístico real del mercado uruguayo.
